@@ -34,7 +34,7 @@ socket.on("player moving", (msg)=>{
 	for (const player of players) {
 		if(player.uid === msg.uid){
 			console.log("player has been found !")
-			player.movePlayer(msg.direction)
+			player.movePlayerFromWebsocket(msg.direction)
 		}
 	}
 })
