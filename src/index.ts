@@ -1,19 +1,63 @@
-import { Application, Sprite } from 'pixi.js'
+import {Application, SCALE_MODES, settings} from 'pixi.js'
+import {Hero} from "./Controller/hero";
+import {io} from "socket.io-client"
+import {Player} from "./Controller/player"
+
+//PIXEL PERFECT SETTINGS
+settings.SCALE_MODE = SCALE_MODES.NEAREST
 
 const app = new Application<HTMLCanvasElement>({
 	view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
-	resolution: window.devicePixelRatio || 1,
+	resolution: window.devicePixelRatio || 2,
 	autoDensity: true,
 	backgroundColor: 0x6495ed,
-	width: 640,
-	height: 480
+	width: window.screen.width,
+	height: window.screen.height
+
 });
 
-const clampy: Sprite = Sprite.from("clampy.png");
+const socket = io("https://game-service-3xgpbrmyzq-ez.a.run.app")
 
-clampy.anchor.set(0.5);
+let players: Player[] = []
 
-clampy.x = app.screen.width / 2;
-clampy.y = app.screen.height / 2;
+const hero = new Hero("hero.png", app, socket)
+console.log(hero)
+socket.on("new player", (msg)=>{
+	console.log("New Player connected")
+	if(msg.uid != hero.uid){
+		const player = new Player("jn.png", msg.uid, app)
+		players.push(player)
+	}
+})
+socket.on("player moving", (msg)=>{
+	console.log("player is moving !")
+	for (const player of players) {
+		if(player.uid === msg.uid){
+			console.log("player has been found !")
+			player.movePlayer(msg.direction)
+		}
+	}
+})
 
-app.stage.addChild(clampy);
+socket.on("player disconnected", (msg) => {
+	console.log("player has been disconnected :" +  msg.uid)
+
+})
+
+window.addEventListener('beforeunload', function (e) {
+	e.preventDefault();
+	socket.emit("close connection", {uid: hero.uid})
+});
+
+
+
+
+
+
+
+
+
+
+
+
+

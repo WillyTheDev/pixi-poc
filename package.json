@@ -7,7 +7,10 @@
     "clean": "rimraf dist"
   },
   "dependencies": {
-    "pixi.js": "^7.4.0"
+    "pixi.js": "^7.4.0",
+    "socket.io": "^4.7.4",
+    "socket.io-client": "^4.7.4",
+    "tweedle.js": "^2.1.0"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^12.0.2",
