@@ -21,6 +21,8 @@ const socket = io("https://game-service-3xgpbrmyzq-ez.a.run.app")
 
 // create viewport
 const viewport = new Viewport({
+	screenWidth: window.innerWidth,
+	screenHeight: window.innerHeight,
 	worldWidth: 4000,
 	worldHeight: 4000,
 	events: app.renderer.events // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
